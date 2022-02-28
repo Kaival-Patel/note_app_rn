@@ -5,12 +5,12 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import AppBarContext from '../context/appbar_context';
 
 function HomeAppBar() {
-  const {showDeleteButton} = useContext(AppBarContext);
+  const data = useContext(AppBarContext);
   return (
     <View style={style.appbarStyle}>
       <Text style={{fontSize: 17}}>Home</Text>
-      {showDeleteButton ? (
-        <FontAwesome name="trash" size={25} color='#E42C5A' />
+      {data.data.showDeleteButton ? (
+        <FontAwesome name="trash" size={25} color="#E42C5A" />
       ) : (
         <View></View>
       )}

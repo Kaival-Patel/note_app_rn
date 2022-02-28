@@ -1,4 +1,11 @@
-import React, {useCallback, useContext, useMemo, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   Image,
@@ -11,7 +18,7 @@ import {
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useSelector} from 'react-redux';
 import {MenuIcon} from '../components/asset_icons';
 import {Fab} from '../components/fab';
@@ -22,7 +29,16 @@ export default HomeScreen = ({navigation, route}) => {
   //STATE MANAGEMENT NOTES
   const notes = useSelector(state => state.note_reducer);
   console.log('NOTES LENGTH => ' + notes.length);
-
+  const context = useContext(AppBarContext);
+  const [selectedIds, setSelectedIds] = useState([]);
+  useEffect(() => {
+    if (selectedIds.length > 0) {
+      
+      context.data = true;
+    } else {
+      context.data = false;
+    }
+  }, [selectedIds]);
   const handleLongPressOnItem = (id, toggleDeleteButton) => {
     console.log(id);
     toggleDeleteButton();
@@ -39,20 +55,71 @@ export default HomeScreen = ({navigation, route}) => {
           renderItem={item => (
             console.log(item.item.payload),
             (
-              <View key={item.item.payload.id} style={style.noteContainer}>
+              <View
+                key={item.item.payload.id}
+                style={{
+                  borderColor: '#4ACFAC',
+                  flex: 1,
+                  padding: 10,
+                  backgroundColor: '#FEFFFF',
+                  borderRadius: 10,
+                  elevation: 5,
+                  margin: 10,
+                  borderWidth: selectedIds.includes(item.item.payload.id)
+                    ? 2
+                    : 0,
+                }}>
                 <AppBarContext.Consumer>
-                  {({toggleDeleteButton}) => (
-                    <TouchableOpacity
-                      onLongPress={
-                        toggleDeleteButton
-                        // handleLongPressOnItem(item.item.payload.id,toggleDeleteButton)
-                      }>
-                      <Text style={style.title}>{item.item.payload.title}</Text>
-                      <Text style={style.description}>
-                        {item.item.payload.description}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
+                  {data => {
+                    console.log('-------', data);
+                    return (
+                      <TouchableOpacity
+                        onPress={() => {
+                          if (selectedIds.includes(item.item.payload.id)) {
+                            setSelectedIds(
+                              selectedIds.filter(
+                                id => id !== item.item.payload.id,
+                              ),
+                            );
+                          } else {
+                            setSelectedIds([
+                              ...selectedIds,
+                              item.item.payload.id,
+                            ]);
+                          }
+                        }}
+                        onLongPress={
+                          () => {
+                            data.toggleDeleteButton();
+                            setSelectedIds([
+                              ...selectedIds,
+                              item.item.payload.id,
+                            ]);
+                          }
+                          // handleLongPressOnItem(item.item.payload.id,toggleDeleteButton)
+                        }>
+                        <Text style={style.title}>
+                          {item.item.payload.title}
+                        </Text>
+                        <Text style={style.description}>
+                          {item.item.payload.description}
+                        </Text>
+                        {selectedIds.includes(item.item.payload.id) ? (
+                          <FontAwesome
+                            name="check"
+                            style={{
+                              zIndex: 1,
+                              bottom: 5,
+                              right: 5,
+                              position: 'absolute',
+                            }}
+                            size={20}
+                            color="#4ACFAC"
+                          />
+                        ) : null}
+                      </TouchableOpacity>
+                    );
+                  }}
                 </AppBarContext.Consumer>
               </View>
             )

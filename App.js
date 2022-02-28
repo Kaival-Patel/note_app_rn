@@ -9,101 +9,115 @@ import AddScreen from './src/screens/add_screen';
 import HomeAppBar from './src/components/home_app_bar';
 import AppBarContext from './src/context/appbar_context';
 const Stack = createStackNavigator();
-export default NotesApp = () => {
-  toggleDeleteButton = () => {
-    console.log('Togggling button');
-    this.setState(state => ({
-      showDeleteButton: !state.showDeleteButton,
-    }));
-  };
-  console.log('HEllo Constructor');
-  state = {
-    showDeleteButton: false,
-    toggleDeleteButton: this.toggleDeleteButton,
-  };
-  return (
-    // {/* <StatusBar barStyle={isDarkMode?'light-content':'dark-content'}/> */}
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            headerTintColor: Colors.black,
-            headerStyle: {
-              backgroundColor: Colors.white,
-            },
-            headerTitle: props => (
-              <AppBarContext.Provider value={this.state}>
-                <HomeAppBar />
-              </AppBarContext.Provider>
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="Add"
-          component={AddScreen}
-          options={{
-            title: 'Add Note',
-            headerTintColor: Colors.black,
-            headerStyle: {
-              backgroundColor: Colors.white,
-            },
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
-// export default class NotesApp extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.toggleDeleteButton = () => {
-//       console.log("Togggling button");
-//       this.setState(state => ({
-//         showDeleteButton: true,
-//       }));
-//     };
-//     console.log("HEllo Constructor");
-//     this.state = {
-//       showDeleteButton:false,
-//       toggleDeleteButton: this.toggleDeleteButton,
-//     }
-//   }
+// export default NotesApp = () => {
+//   toggleDeleteButton = () => {
+//     console.log('Togggling button');
+//     this.setState(state => ({
+//       showDeleteButton: !state.showDeleteButton,
+//     }));
+//   };
+//   console.log('HEllo Constructor');
+//   state = {
+//     showDeleteButton: false,
+//   };
+//   return (
+//     // {/* <StatusBar barStyle={isDarkMode?'light-content':'dark-content'}/> */}
+//     <NavigationContainer>
+//       <Stack.Navigator initialRouteName="Home">
+//         <Stack.Screen
+//           name="Home"
+//           component={HomeScreen}
+//           options={{
+//             headerTintColor: Colors.black,
+//             headerStyle: {
+//               backgroundColor: Colors.white,
+//             },
+//             headerTitle: props => (
+//               <AppBarContext.Provider
+//                 value={{
+//                   data: {...this.state},
+//                   toggleDeleteButton: () => {
+//                     console.log('Togggling button');
+//                     this.setState(state => ({
+//                       showDeleteButton: !state.showDeleteButton,
+//                     }));
+//                   },
+//                 }}>
+//                 <HomeAppBar />
+//               </AppBarContext.Provider>
+//             ),
+//           }}
+//         />
+//         <Stack.Screen
+//           name="Add"
+//           component={AddScreen}
+//           options={{
+//             title: 'Add Note',
+//             headerTintColor: Colors.black,
+//             headerStyle: {
+//               backgroundColor: Colors.white,
+//             },
+//           }}
+//         />
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//   );
+// };
+export default class NotesApp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.toggleDeleteButton = () => {
+      console.log('Togggling button');
+      this.setState(state => ({
+        showDeleteButton: true,
+      }));
+    };
+    console.log('HEllo Constructor');
+    this.state = {
+      showDeleteButton: false,
+    };
+  }
 
-//   render() {
-//     return (
-//       // {/* <StatusBar barStyle={isDarkMode?'light-content':'dark-content'}/> */}
-//       <NavigationContainer>
-//         <Stack.Navigator initialRouteName="Home">
-//           <Stack.Screen
-//             name="Home"
-//             component={HomeScreen}
-//             options={{
-//               headerTintColor: Colors.black,
-//               headerStyle: {
-//                 backgroundColor: Colors.white,
-//               },
-//               headerTitle: props => (
-//                 <AppBarContext.Provider value={this.state}>
-//                   <HomeAppBar />
-//                 </AppBarContext.Provider>
-//               ),
-//             }}
-//           />
-//           <Stack.Screen
-//             name="Add"
-//             component={AddScreen}
-//             options={{
-//               title: 'Add Note',
-//               headerTintColor: Colors.black,
-//               headerStyle: {
-//                 backgroundColor: Colors.white,
-//               },
-//             }}
-//           />
-//         </Stack.Navigator>
-//       </NavigationContainer>
-//     );
-//   }
-// }
+  render() {
+    return (
+      // {/* <StatusBar barStyle={isDarkMode?'light-content':'dark-content'}/> */}
+      <NavigationContainer>
+        <AppBarContext.Provider
+          value={{
+            data: {...this.state},
+            toggleDeleteButton: () => {
+              console.log('Togggling button');
+              this.setState(state => ({
+                showDeleteButton: !state.showDeleteButton,
+              }));
+            },
+          }}>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{
+                headerTintColor: Colors.black,
+                headerStyle: {
+                  backgroundColor: Colors.white,
+                },
+                headerTitle: props => <HomeAppBar />,
+              }}
+            />
+            <Stack.Screen
+              name="Add"
+              component={AddScreen}
+              options={{
+                title: 'Add Note',
+                headerTintColor: Colors.black,
+                headerStyle: {
+                  backgroundColor: Colors.white,
+                },
+              }}
+            />
+          </Stack.Navigator>
+        </AppBarContext.Provider>
+      </NavigationContainer>
+    );
+  }
+}
