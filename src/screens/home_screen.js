@@ -33,7 +33,6 @@ export default HomeScreen = ({navigation, route}) => {
   const [selectedIds, setSelectedIds] = useState([]);
   useEffect(() => {
     if (selectedIds.length > 0) {
-      
       context.data = true;
     } else {
       context.data = false;
@@ -75,29 +74,39 @@ export default HomeScreen = ({navigation, route}) => {
                     return (
                       <TouchableOpacity
                         onPress={() => {
+                          var ids = [];
                           if (selectedIds.includes(item.item.payload.id)) {
-                            setSelectedIds(
-                              selectedIds.filter(
-                                id => id !== item.item.payload.id,
-                              ),
+                            ids = selectedIds.filter(
+                              id => id !== item.item.payload.id,
                             );
+                            setSelectedIds(ids);
+                          }
+                          else{
+                            ids = selectedIds;
+                          }
+                          if (ids.length > 0) {
+                            data.toggleDeleteButton(true,ids);
                           } else {
-                            setSelectedIds([
-                              ...selectedIds,
-                              item.item.payload.id,
-                            ]);
+                            data.toggleDeleteButton(false,ids);
                           }
                         }}
-                        onLongPress={
-                          () => {
-                            data.toggleDeleteButton();
-                            setSelectedIds([
-                              ...selectedIds,
-                              item.item.payload.id,
-                            ]);
+                        onLongPress={() => {
+                          var ids;
+                          if (selectedIds.includes(item.item.payload.id)) {
+                            ids = selectedIds.filter(
+                              id => id !== item.item.payload.id,
+                            );
+                            setSelectedIds(ids);
+                          } else {
+                            ids = [...selectedIds, item.item.payload.id];
+                            setSelectedIds(ids);
                           }
-                          // handleLongPressOnItem(item.item.payload.id,toggleDeleteButton)
-                        }>
+                          if (ids.length > 0) {
+                            data.toggleDeleteButton(true,ids);
+                          } else {
+                            data.toggleDeleteButton(false,ids);
+                          }
+                        }}>
                         <Text style={style.title}>
                           {item.item.payload.title}
                         </Text>

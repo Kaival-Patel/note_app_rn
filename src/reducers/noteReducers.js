@@ -13,13 +13,16 @@ export const noteReducer = createSlice({
       console.log(state.length);
     },
 
-    REMOVE_NOTE : (state, id) => {
-        console.log("REQ FOR REMOVING => "+id);
+    REMOVE_NOTE: (state, ids) => {
+      console.log('REQ FOR REMOVING => ' + ids);
+      for (id in ids) {
         state.filter(note => note.id !== id);
-        console.log(state.length);
-    }
+      }
+
+      console.log(state.length);
+    },
   },
 });
 
-export const {ADD_NOTE,REMOVE_NOTE} = noteReducer.actions;
+export const {ADD_NOTE, REMOVE_NOTE} = noteReducer.actions;
 export default noteReducer.reducer;

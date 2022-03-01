@@ -66,15 +66,16 @@ const Stack = createStackNavigator();
 export default class NotesApp extends React.Component {
   constructor(props) {
     super(props);
-    this.toggleDeleteButton = () => {
-      console.log('Togggling button');
-      this.setState(state => ({
-        showDeleteButton: true,
-      }));
-    };
+    // this.toggleDeleteButton = () => {
+    //   console.log('Togggling button');
+    //   this.setState(state => ({
+    //     showDeleteButton: true,
+    //   }));
+    // };
     console.log('HEllo Constructor');
     this.state = {
       showDeleteButton: false,
+      selectedIds: [],
     };
   }
 
@@ -85,10 +86,11 @@ export default class NotesApp extends React.Component {
         <AppBarContext.Provider
           value={{
             data: {...this.state},
-            toggleDeleteButton: () => {
+            toggleDeleteButton: (markForDelete, selectedIds) => {
               console.log('Togggling button');
-              this.setState(state => ({
-                showDeleteButton: !state.showDeleteButton,
+              this.setState( state => ({
+                showDeleteButton: markForDelete,
+                selectedIds: selectedIds,
               }));
             },
           }}>
