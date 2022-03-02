@@ -54,24 +54,24 @@ export default HomeScreen = ({navigation, route}) => {
           renderItem={item => (
             console.log(item.item.payload),
             (
-              <View
-                key={item.item.payload.id}
-                style={{
-                  borderColor: '#4ACFAC',
-                  flex: 1,
-                  padding: 10,
-                  backgroundColor: '#FEFFFF',
-                  borderRadius: 10,
-                  elevation: 5,
-                  margin: 10,
-                  borderWidth: selectedIds.includes(item.item.payload.id)
-                    ? 2
-                    : 0,
-                }}>
-                <AppBarContext.Consumer>
-                  {data => {
-                    console.log('-------', data);
-                    return (
+              <AppBarContext.Consumer>
+                {data => {
+                  console.log('-------', data);
+                  return (
+                    <View
+                      key={item.item.payload.id}
+                      style={{
+                        borderColor: '#4ACFAC',
+                        flex: 1,
+                        padding: 10,
+                        backgroundColor: '#FEFFFF',
+                        borderRadius: 10,
+                        elevation: 5,
+                        margin: 10,
+                        borderWidth: selectedIds.includes(item.item.payload.id)
+                          ? 2
+                          : 0,
+                      }}>
                       <TouchableOpacity
                         onPress={() => {
                           var ids = [];
@@ -80,14 +80,13 @@ export default HomeScreen = ({navigation, route}) => {
                               id => id !== item.item.payload.id,
                             );
                             setSelectedIds(ids);
-                          }
-                          else{
+                          } else {
                             ids = selectedIds;
                           }
                           if (ids.length > 0) {
-                            data.toggleDeleteButton(true,ids);
+                            data.toggleDeleteButton(true, ids);
                           } else {
-                            data.toggleDeleteButton(false,ids);
+                            data.toggleDeleteButton(false, ids);
                           }
                         }}
                         onLongPress={() => {
@@ -102,35 +101,35 @@ export default HomeScreen = ({navigation, route}) => {
                             setSelectedIds(ids);
                           }
                           if (ids.length > 0) {
-                            data.toggleDeleteButton(true,ids);
+                            data.toggleDeleteButton(true, ids);
                           } else {
-                            data.toggleDeleteButton(false,ids);
+                            data.toggleDeleteButton(false, ids);
                           }
                         }}>
-                        <Text style={style.title}>
-                          {item.item.payload.title}
-                        </Text>
-                        <Text style={style.description}>
-                          {item.item.payload.description}
-                        </Text>
-                        {selectedIds.includes(item.item.payload.id) ? (
-                          <FontAwesome
-                            name="check"
-                            style={{
-                              zIndex: 1,
-                              bottom: 5,
-                              right: 5,
-                              position: 'absolute',
-                            }}
-                            size={20}
-                            color="#4ACFAC"
-                          />
-                        ) : null}
+                          <Text style={style.title}>
+                            {item.item.payload.title}
+                          </Text>
+                          <Text style={style.description}>
+                            {item.item.payload.description}
+                          </Text>
+                          {selectedIds.includes(item.item.payload.id) ? (
+                            <FontAwesome
+                              name="check"
+                              style={{
+                                zIndex: 1,
+                                bottom: 5,
+                                right: 5,
+                                position: 'absolute',
+                              }}
+                              size={20}
+                              color="#4ACFAC"
+                            />
+                          ) : null}
                       </TouchableOpacity>
-                    );
-                  }}
-                </AppBarContext.Consumer>
-              </View>
+                    </View>
+                  );
+                }}
+              </AppBarContext.Consumer>
             )
           )}
           keyExtractor={item => item.id}

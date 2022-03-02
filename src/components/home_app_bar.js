@@ -17,7 +17,6 @@ function HomeAppBar() {
         <TouchableOpacity
           onPress={() => {
             console.log('Deleting '+data.data.selectedIds);
-          
             dispatch(REMOVE_NOTE(data.data.selectedIds));
           }}>
           <FontAwesome name="trash" size={25} color="#E42C5A" />
