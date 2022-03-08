@@ -14,18 +14,24 @@ export const noteReducer = createSlice({
     },
 
     REMOVE_NOTE: (state, payload) => {
-      for(var i=0;i<payload.payload.length;i++){
+      for (var i = 0; i < payload.payload.length; i++) {
         state = state.filter(note => note.payload.id !== payload.payload[i]);
       }
-      // for (id of payload.payload) {
-      //   console.info(id);
-      //   state = state.filter(note => note.payload.id !== id);
-      // }
-      console.warn(state.length);
-      
+      return state;
+    },
+    UPDATE_NOTE: (state, payload) => {
+      var element = state.find(note => note.id === payload.id);
+      state[state.indexOf(element)] = payload;
+      // state = state.map(note => {
+      //   if (note.payload.id == payload.id) {
+      //     note.payload.title = payload.title;
+      //     note.payload.description = payload.description;
+      //   }
+      // });
+      return state;
     },
   },
 });
 
-export const {ADD_NOTE, REMOVE_NOTE} = noteReducer.actions;
+export const {ADD_NOTE, REMOVE_NOTE, UPDATE_NOTE} = noteReducer.actions;
 export default noteReducer.reducer;

@@ -16,10 +16,10 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {MenuIcon} from '../components/asset_icons';
 import {Fab} from '../components/fab';
 import {AppHeader} from '../components/header';
@@ -31,22 +31,95 @@ export default HomeScreen = ({navigation, route}) => {
   console.log('NOTES LENGTH => ' + notes.length);
   const context = useContext(AppBarContext);
   const [selectedIds, setSelectedIds] = useState([]);
-  useEffect(() => {
-    if (selectedIds.length > 0) {
-      context.data = true;
+  const [searchedNotes, setSearchedNotes] = useState([]);
+  const [isSearchingNotes, setIsSearchingNotes] = useState(false);
+  const handleSearch = query => {
+    if (query != '') {
+      //FIRE QUERY
+      setIsSearchingNotes(true);
+      let notesTemp = notes;
+      let searchResults = notesTemp.filter(
+        note =>
+          note.payload.title.toLowerCase().includes(query.toLowerCase()) ||
+          note.payload.description.toLowerCase().includes(query.toLowerCase()),
+      );
+      console.debug(searchResults);
+      setSearchedNotes(searchResults);
     } else {
-      context.data = false;
+      setIsSearchingNotes(false);
+      setSearchedNotes([]);
     }
-  }, [selectedIds]);
-  const handleLongPressOnItem = (id, toggleDeleteButton) => {
-    console.log(id);
-    toggleDeleteButton();
   };
-
   return (
     // <ScrollView>
     <View style={{flex: 1}}>
-      {notes.length > 0 ? (
+      <TextInput
+        style={style.searchBarStyle}
+        onChangeText={query => handleSearch(query)}
+        placeholder="Search notes by its title/description"
+      />
+
+      {isSearchingNotes ? (
+        searchedNotes.length > 0 ? (
+          <View>
+            <Text style={style.searchTextStyle}>Search Results</Text>
+            <FlatList
+              numColumns={2}
+              data={searchedNotes}
+              style={{width: '100%'}}
+              renderItem={item => (
+                console.log(item.item.payload),
+                (
+                  <View
+                    key={item.item.payload.id}
+                    style={{
+                      borderColor: '#4ACFAC',
+                      flex: 1,
+                      padding: 10,
+                      backgroundColor: '#FEFFFF',
+                      borderRadius: 10,
+                      elevation: 5,
+                      margin: 10,
+                      borderWidth: selectedIds.includes(item.item.payload.id)
+                        ? 2
+                        : 0,
+                    }}>
+                    <TouchableOpacity>
+                      <Text style={style.title}>{item.item.payload.title}</Text>
+                      <Text style={style.description}>
+                        {item.item.payload.description}
+                      </Text>
+                      {selectedIds.includes(item.item.payload.id) ? (
+                        <FontAwesome
+                          name="check"
+                          style={{
+                            zIndex: 1,
+                            bottom: 5,
+                            right: 5,
+                            position: 'absolute',
+                          }}
+                          size={20}
+                          color="#4ACFAC"
+                        />
+                      ) : null}
+                    </TouchableOpacity>
+                  </View>
+                )
+              )}
+              keyExtractor={item => item.id}
+            />
+          </View>
+        ) : (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+            }}>
+            <Text>No search results</Text>
+          </View>
+        )
+      ) : notes.length > 0 ? (
         <FlatList
           numColumns={2}
           data={notes}
@@ -73,20 +146,21 @@ export default HomeScreen = ({navigation, route}) => {
                       }}>
                       <TouchableOpacity
                         onPress={() => {
-                          var ids = [];
-                          if (selectedIds.includes(item.item.payload.id)) {
-                            ids = selectedIds.filter(
-                              id => id !== item.item.payload.id,
-                            );
-                            setSelectedIds(ids);
-                          } else {
-                            ids = selectedIds;
-                          }
-                          if (ids.length > 0) {
-                            data.toggleDeleteButton(true, ids);
-                          } else {
-                            data.toggleDeleteButton(false, ids);
-                          }
+                          // var ids = [];
+                          // if (selectedIds.includes(item.item.payload.id)) {
+                          //   ids = selectedIds.filter(
+                          //     id => id !== item.item.payload.id,
+                          //   );
+                          //   setSelectedIds(ids);
+                          // } else {
+                          //   ids = selectedIds;
+                          // }
+                          // if (ids.length > 0) {
+                          //   data.toggleDeleteButton(true, ids);
+                          // } else {
+                          //   data.toggleDeleteButton(false, ids);
+                          // }
+                          navigation.navigate('Add', item.item.payload);
                         }}
                         onLongPress={() => {
                           var ids;
@@ -105,25 +179,25 @@ export default HomeScreen = ({navigation, route}) => {
                             data.toggleDeleteButton(false, ids);
                           }
                         }}>
-                          <Text style={style.title}>
-                            {item.item.payload.title}
-                          </Text>
-                          <Text style={style.description}>
-                            {item.item.payload.description}
-                          </Text>
-                          {selectedIds.includes(item.item.payload.id) ? (
-                            <FontAwesome
-                              name="check"
-                              style={{
-                                zIndex: 1,
-                                bottom: 5,
-                                right: 5,
-                                position: 'absolute',
-                              }}
-                              size={20}
-                              color="#4ACFAC"
-                            />
-                          ) : null}
+                        <Text style={style.title}>
+                          {item.item.payload.title}
+                        </Text>
+                        <Text style={style.description}>
+                          {item.item.payload.description}
+                        </Text>
+                        {selectedIds.includes(item.item.payload.id) ? (
+                          <FontAwesome
+                            name="check"
+                            style={{
+                              zIndex: 1,
+                              bottom: 5,
+                              right: 5,
+                              position: 'absolute',
+                            }}
+                            size={20}
+                            color="#4ACFAC"
+                          />
+                        ) : null}
                       </TouchableOpacity>
                     </View>
                   );
@@ -210,6 +284,16 @@ const style = StyleSheet.create({
     backgroundColor: '#FEFFFF',
     borderRadius: 10,
     elevation: 5,
+    margin: 10,
+  },
+  searchBarStyle: {
+    backgroundColor: '#FEFFFF',
+    borderRadius: 30,
+    elevation: 3,
+    margin: 10,
+    padding: 10,
+  },
+  searchTextStyle: {
     margin: 10,
   },
 });
