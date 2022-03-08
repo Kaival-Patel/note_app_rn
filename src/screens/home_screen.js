@@ -52,7 +52,6 @@ export default HomeScreen = ({navigation, route}) => {
           data={notes}
           style={{width: '100%'}}
           renderItem={item => (
-            console.log(item.item.payload),
             (
               <AppBarContext.Consumer>
                 {data => {
@@ -132,7 +131,9 @@ export default HomeScreen = ({navigation, route}) => {
               </AppBarContext.Consumer>
             )
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={(item,index)=>{
+            return item.payload.id;
+          }}
         />
       ) : (
         <View
